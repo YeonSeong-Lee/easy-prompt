@@ -1,0 +1,70 @@
+:root {
+  --main-color: orange;
+  --main-bg-color: white;
+  scrollbar-color: color-mix(in srgb, var(--main-bg-color), black 30%) transparent;
+}
+
+body {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 98vh;
+}
+body * {
+  font-family: "NanumSquareNeo";
+}
+
+h1 {
+  text-align: center;
+}
+
+div.main {
+  background-color: transparent;
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  height: auto;
+}
+
+.main--input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  box-sizing: border-box;
+  height: auto;
+  resize: none;
+  font-size: 0.9rem;
+  line-height: 1.3rem;
+}
+
+div.main--buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main--buttons__submit {
+  background-color: var(--main-color);
+  color: white;
+  margin: 5px 5px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+}
+.main--buttons__submit:hover {
+  background-color: color-mix(in srgb, var(--main-color), black 10%);
+}
+.main--buttons__submit:active {
+  background-color: color-mix(in srgb, var(--main-color), black 20%);
+}
+
+.text--b {
+  font-family: "NanumSquareNeoBold";
+}
+
+.text--eb {
+  font-family: "NanumSquareNeoExtraBold";
+}/*# sourceMappingURL=main.css.map */
