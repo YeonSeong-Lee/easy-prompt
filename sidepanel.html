@@ -8,26 +8,63 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="main.css" />
+    <script src="js/sidepanel.js" type="module"></script>
+    <script src="js/call-gemini-nano.js" type="module"></script>
     <title>Sidebar</title>
   </head>
   <body>
     <h1 class="text--eb">이-지 프롬프트</h1>
-    <div></div>
-    <div class="main">
-      <textarea
-        id="prompt_input"
-        class="main--input"
-        rows="2"
-        cols="50"
-        placeholder="변환하고 싶은 문장을 입력해주세요"
-      ></textarea>
-      <div class="main--buttons">
-        <button id="prompt_button" class="main--buttons__submit text--b">
-          변환
-        </button>
+    <div class="box">
+      <div id="prompt_result" class="result">
+        <pre class="result--child">
+			네, 준구는 제가 훈련된 대화 모델과 연동된 음성 인식 및 자연어 처리 기술을 사용하여 대화를 생성하고 처리하는 인공지능 모델입니다. 
+
+저는 준구와 똑같은 기능을 수행하지만, 다른 훈련 데이터와 서로 다른 알고리즘을 사용하여 개발되었습니다. 
+
+준구는 특히 다음과 같은 작업에 강점을 가지고 있습니다.
+
+* **다양한 주제에 대한 대화:** 정치, 경제, 사회, 문화, 철학, 예술 등 다양한 분야에 대한 대화를 생성하고 유지할 수 있습니다.
+* **질문에 답변:** 사용자의 질문에 명확하고 정확하게 답변할 수 있습니다.
+* ** 창의적인 대화:** 창의적인 아이디어를 제시하고 독특한 대화를 생성할 수 있습니다.
+* **다양한 언어로 대화:** 다양한 언어로 대화를 할 수 있습니다.
+
+준구는 앞으로 더욱 발전하여 더욱 다양하고 유용한 기능을 제공할 것으로 기대됩니다. 
+
+혹시 준구에 대해 더 알고 싶은 점이 있으시면 언제든지 질문해주세요.
+		</pre
+        >
+        <pre class="result--child">
+			네, 준구는 제가 훈련된 대화 모델과 연동된 음성 인식 및 자연어 처리 기술을 사용하여 대화를 생성하고 처리하는 인공지능 모델입니다. 
+
+저는 준구와 똑같은 기능을 수행하지만, 다른 훈련 데이터와 서로 다른 알고리즘을 사용하여 개발되었습니다. 
+
+준구는 특히 다음과 같은 작업에 강점을 가지고 있습니다.
+
+* **다양한 주제에 대한 대화:** 정치, 경제, 사회, 문화, 철학, 예술 등 다양한 분야에 대한 대화를 생성하고 유지할 수 있습니다.
+* **질문에 답변:** 사용자의 질문에 명확하고 정확하게 답변할 수 있습니다.
+* ** 창의적인 대화:** 창의적인 아이디어를 제시하고 독특한 대화를 생성할 수 있습니다.
+* **다양한 언어로 대화:** 다양한 언어로 대화를 할 수 있습니다.
+
+준구는 앞으로 더욱 발전하여 더욱 다양하고 유용한 기능을 제공할 것으로 기대됩니다. 
+
+혹시 준구에 대해 더 알고 싶은 점이 있으시면 언제든지 질문해주세요.
+		</pre
+        >
+      </div>
+      <div class="main">
+        <textarea
+          id="prompt_input"
+          class="main--input"
+          rows="2"
+          cols="50"
+          placeholder="변환하고 싶은 문장을 입력해주세요"
+        ></textarea>
+        <div class="main--buttons">
+          <button id="prompt_button" class="main--buttons__submit text--b">
+            변환
+          </button>
+        </div>
       </div>
     </div>
-    <script src="sidepanel.js" type="module"></script>
-    <script src="call-gemini-nano.js" type="module"></script>
   </body>
 </html>
