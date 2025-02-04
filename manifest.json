@@ -3,10 +3,7 @@
   "version": "1.0",
   "minimum_chrome_version": "131",
   "manifest_version": 3,
-  "permissions": [
-    "sidePanel",
-    "aiLanguageModelOriginTrial"
-  ],
+  "permissions": ["sidePanel", "aiLanguageModelOriginTrial"],
   "side_panel": {
     "default_path": "sidepanel.html"
   },
@@ -14,8 +11,10 @@
     "default_title": "이지 프롬프트"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzqWoWMF2RGHL4CTfYLiZi142OnhKKJ8OHda+59oj7mfmi1gUrTMjIv16Bu+zEgzXvC6EAjIKaBv55ojdp6A+/aRgc5oc4sPxtfO5NZBr5Fx0VIMyQOBTNOKfPQh17/R5+mGi6Wwy8oZImIjPqjYlC0ZOClbfQ4RRMYGAqplTj4mA7cVCpTcyAXTqQ4tCmw2Jwy+kN52qS96L6L01CLFF31Uu9HQYvfbIdsQtDHl9brB+yk05lE+xzkwbTs5dHFnzs2yRoVAV6vvlTpBkrSYiWENK1CAhhb1vk0E+4SfcjHt4r/+OSKpLhHMtbRtoh4hNAMXLz3bsbNSmsafX+zU/pQIDAQAB",
-  "trial_tokens": ["Ai66reCarUaxQy5GzRO3MADqJgFLJZgY3qUziXzW94h6Is47WkYdCGL79mYjkKyol2wuOhUKWKRSXH2LkmCAdwUAAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vaW5wb2Jmb2Nna3BtbWlsZGRnaGRtZGJqamtoZ29vbW0iLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"]
+  "trial_tokens": [
+    "Ai66reCarUaxQy5GzRO3MADqJgFLJZgY3qUziXzW94h6Is47WkYdCGL79mYjkKyol2wuOhUKWKRSXH2LkmCAdwUAAAB4eyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vaW5wb2Jmb2Nna3BtbWlsZGRnaGRtZGJqamtoZ29vbW0iLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElGb3JFeHRlbnNpb24iLCJleHBpcnkiOjE3NjA0ODYzOTl9"
+  ]
 }
