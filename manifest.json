@@ -1,6 +1,7 @@
 {
   "name": "My Extension",
   "version": "1.0",
+  "minimum_chrome_version": "131",
   "manifest_version": 3,
   "permissions": [
     "sidePanel",
