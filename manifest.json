@@ -4,10 +4,10 @@
   "manifest_version": 3,
   "permissions": ["sidePanel"],
   "side_panel": {
-    "default_path": "sidebar.html"
+    "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Open Side Panel"
+    "default_title": "이지 프롬프트"
   },
   "background": {
     "service_worker": "background.js"
