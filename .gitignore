@@ -1,5 +1,4 @@
 *.zip
 # scss 무시
 
-main.scss
 main.css.map
