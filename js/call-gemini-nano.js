@@ -10,7 +10,7 @@ const session = await chrome.aiOriginTrial.languageModel.create({
   },
 });
 
-const callGemini = async () => {
+async function callGemini() {
   try {
     const promptTextArea = document.getElementById("prompt_input");
     const resultArea = document.getElementById("prompt_result");
@@ -39,6 +39,6 @@ const callGemini = async () => {
   } catch (error) {
     console.error("Error during AI response generation:", error.message);
   }
-};
+}
 
 document.getElementById("prompt_button").addEventListener("click", callGemini);
