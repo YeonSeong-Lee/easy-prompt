@@ -1,0 +1,4 @@
+*.zip
+# scss 무시
+
+main.css.map

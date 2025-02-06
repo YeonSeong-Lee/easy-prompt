@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-neo.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <script src="js/sidepanel.js" type="module"></script>
+    <script src="js/call-gemini-nano.js" type="module"></script>
+    <title>Sidebar</title>
+  </head>
+  <body>
+    <h1 class="text--eb">이-지 프롬프트</h1>
+    <div class="box">
+      <div id="prompt_result" class="result"></div>
+      <div class="main">
+        <textarea
+          id="prompt_input"
+          class="main--input"
+          rows="2"
+          cols="50"
+          placeholder="변환하고 싶은 문장을 입력해주세요"
+        ></textarea>
+        <div class="main--buttons">
+          <button id="prompt_button" class="main--buttons__submit text--b">
+            변환
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
