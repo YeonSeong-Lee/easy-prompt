@@ -1,13 +1,13 @@
+import { SYSTEM_PROMPT } from "./system-prompt.js";
+
+
 const session = await chrome.aiOriginTrial.languageModel.create({
   monitor(m) {
     m.addEventListener("downloadprogress", (e) => {
       console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
     });
   },
-  systemPrompt: "You are a helpful assistant. Please respond in English only.",
-  generationConfig: {
-    allowedLanguages: ["en"],
-  },
+  systemPrompt: SYSTEM_PROMPT,
 });
 
 async function callGemini() {
