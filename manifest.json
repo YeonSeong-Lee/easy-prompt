@@ -3,7 +3,21 @@
   "version": "1.0",
   "minimum_chrome_version": "131",
   "manifest_version": 3,
-  "permissions": ["sidePanel", "aiLanguageModelOriginTrial"],
+  "permissions": [
+    "sidePanel", 
+    "aiLanguageModelOriginTrial",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["js/content-script.js"]
+    }
+  ],
   "side_panel": {
     "default_path": "sidepanel.html"
   },
