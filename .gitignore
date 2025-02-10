@@ -1,4 +1,5 @@
 *.zip
 # scss 무시
+.DS_Store
 
 main.css.map
