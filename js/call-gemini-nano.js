@@ -24,18 +24,27 @@ async function callGemini() {
     const btn = document.getElementById("prompt_button");
     btn.textContent = "로딩...";
     btn.disabled = true;
-    const result = await session.prompt(inputPrompt);
+    
+    const newElement = document.createElement("pre");
+    newElement.classList.add("result--child");
+    resultArea.appendChild(newElement);
+    
+    const stream = session.promptStreaming(inputPrompt);
+    let previousChunk = "";
+    
+    for await (const chunk of stream) {
+      const newChunk = chunk.startsWith(previousChunk)
+        ? chunk.slice(previousChunk.length) 
+        : chunk;
+      
+      newElement.textContent += newChunk;
+      newElement.scrollIntoView({ behavior: "smooth", block: "end" });      
+      previousChunk = chunk;
+    }
+
     btn.disabled = false;
     btn.textContent = "변환";
 
-    console.log(result);
-
-    const newElement = document.createElement("pre");
-    newElement.classList.add("result--child");
-    newElement.textContent = result;
-
-    resultArea.appendChild(newElement);
-    newElement.scrollIntoView({ behavior: "smooth", block: "end" });
   } catch (error) {
     console.error("Error during AI response generation:", error.message);
   }
