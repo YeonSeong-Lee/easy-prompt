@@ -36,7 +36,7 @@ div.result {
   scrollbar-width: thin;
 }
 
-div.main {
+div.prompt-form {
   background-color: transparent;
   padding: 3px;
   border: 1px solid var(--main-line-color);
@@ -69,7 +69,7 @@ pre.result--child {
   animation: popUp 1s;
 }
 
-.main--input {
+.prompt-form__input {
   width: 100%;
   padding: 10px;
   border: none;
@@ -85,12 +85,12 @@ pre.result--child {
   line-height: 1.3rem;
 }
 
-div.main--buttons {
+div.prompt-form__actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.main--buttons__submit {
+.prompt-form__submit {
   background-color: var(--main-color);
   color: white;
   margin: 5px 5px;

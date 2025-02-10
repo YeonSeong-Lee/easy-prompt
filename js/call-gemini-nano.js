@@ -10,6 +10,8 @@ const session = await chrome.aiOriginTrial.languageModel.create({
   systemPrompt: SYSTEM_PROMPT,
 });
 
+let currentController = null;
+
 async function callGemini() {
   try {
     const promptTextArea = document.getElementById("prompt_input");
@@ -25,11 +27,13 @@ async function callGemini() {
     btn.textContent = "로딩...";
     btn.disabled = true;
     
+    currentController = new AbortController();
+    
     const newElement = document.createElement("pre");
     newElement.classList.add("result--child");
     resultArea.appendChild(newElement);
     
-    const stream = session.promptStreaming(inputPrompt);
+    const stream = session.promptStreaming(inputPrompt, { signal: currentController.signal });
     let previousChunk = "";
     
     for await (const chunk of stream) {
@@ -46,8 +50,33 @@ async function callGemini() {
     btn.textContent = "변환";
 
   } catch (error) {
-    console.error("Error during AI response generation:", error.message);
+    const btn = document.getElementById("prompt_button");
+    btn.disabled = false;
+    btn.textContent = "변환";
+
+    if (error.name === "AbortError") {
+      console.log("Request was aborted");
+    } else {
+      console.error("Error during AI response generation:", error.message);
+    }
+  } finally {
+    currentController = null;
   }
 }
+
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "c") {
+    if (currentController) {
+      currentController.abort();
+    }
+  }
+});
+
+document.getElementById("prompt_input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+    e.preventDefault(); // Prevent default newline
+    callGemini();
+  }
+});
 
 document.getElementById("prompt_button").addEventListener("click", callGemini);
