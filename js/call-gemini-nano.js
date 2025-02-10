@@ -72,4 +72,11 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+document.getElementById("prompt_input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+    e.preventDefault(); // Prevent default newline
+    callGemini();
+  }
+});
+
 document.getElementById("prompt_button").addEventListener("click", callGemini);
