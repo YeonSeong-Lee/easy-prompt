@@ -1,6 +1,5 @@
 import { SYSTEM_PROMPT } from "./system-prompt.js";
 
-
 const session = await chrome.aiOriginTrial.languageModel.create({
   monitor(m) {
     m.addEventListener("downloadprogress", (e) => {
@@ -26,29 +25,60 @@ async function callGemini() {
     const btn = document.getElementById("prompt_button");
     btn.textContent = "로딩...";
     btn.disabled = true;
-    
+
     currentController = new AbortController();
-    
-    const newElement = document.createElement("pre");
-    newElement.classList.add("result--child");
-    resultArea.appendChild(newElement);
-    
-    const stream = session.promptStreaming(inputPrompt, { signal: currentController.signal });
+
+    const resultContainer = document.createElement("div");
+    resultContainer.classList.add("result--container");
+
+    const buttonBar = document.createElement("div");
+    buttonBar.classList.add("result--buttons");
+
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "⧉";
+    copyButton.classList.add("copy-button");
+    copyButton.addEventListener("click", () => {
+      navigator.clipboard
+        .writeText(preElement.textContent)
+        .then(() => console.log("Copied to clipboard"))
+        .catch((err) => console.error("Failed to copy text", err));
+
+      copyButton.textContent = "✔";
+
+      setTimeout(() => {
+        copyButton.textContent = "⧉";
+      }, 3000);
+    });
+
+    buttonBar.appendChild(copyButton);
+
+    const preElement = document.createElement("pre");
+    preElement.classList.add("result--child");
+
+    resultContainer.appendChild(preElement);
+
+    resultArea.appendChild(resultContainer);
+
+    const stream = session.promptStreaming(inputPrompt, {
+      signal: currentController.signal,
+    });
     let previousChunk = "";
-    
+
     for await (const chunk of stream) {
       const newChunk = chunk.startsWith(previousChunk)
-        ? chunk.slice(previousChunk.length) 
+        ? chunk.slice(previousChunk.length)
         : chunk;
-      
-      newElement.textContent += newChunk;
-      newElement.scrollIntoView({ behavior: "smooth", block: "end" });      
+
+      preElement.textContent += newChunk;
+      resultArea.scrollTop = resultArea.scrollHeight;
       previousChunk = chunk;
     }
 
+    resultContainer.appendChild(buttonBar);
+    resultArea.scrollTop = resultArea.scrollHeight;
+
     btn.disabled = false;
     btn.textContent = "변환";
-
   } catch (error) {
     const btn = document.getElementById("prompt_button");
     btn.disabled = false;

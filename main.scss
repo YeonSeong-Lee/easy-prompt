@@ -29,31 +29,55 @@ div.box {
   gap: 10px;
 }
 
-div.result {
+.result {
   height: 75vh;
   overflow: auto;
 
   scrollbar-width: thin;
+
+  &--container {
+    padding: 10px;
+  }
 }
 
-div.prompt-form {
-  background-color: transparent;
-  padding: 3px;
-  border: 1px solid var(--main-line-color);
-  border-radius: 15px;
-  height: auto;
+.result--buttons {
+  margin-top: 10px;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    padding: 5px;
+    padding-bottom: 0;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: transparent;
+    transition: background-color 0.2s ease-out;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
 }
 
-pre.result--child {
+.result--child {
   background-color: transparent;
   padding: 10px;
   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: 15px;
-  margin: 10px;
   height: auto;
   font-size: 1.1em;
   white-space: pre-wrap;
   line-height: 1.3rem;
+  margin-bottom: 5px;
 
   @keyframes popUp {
     from {
@@ -67,6 +91,14 @@ pre.result--child {
   }
 
   animation: popUp 1s;
+}
+
+.prompt-form {
+  background-color: transparent;
+  padding: 3px;
+  border: 1px solid var(--main-line-color);
+  border-radius: 15px;
+  height: auto;
 }
 
 .prompt-form__input {
@@ -85,7 +117,7 @@ pre.result--child {
   line-height: 1.3rem;
 }
 
-div.prompt-form__actions {
+.prompt-form__actions {
   display: flex;
   justify-content: flex-end;
 }
