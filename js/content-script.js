@@ -11,29 +11,51 @@ function getLastUserInput() {
 }
 
 /**
- * Sends a message to the browser extension
- * @function sendToExtension
- * @param {string} message - The message to send to the extension
- * @returns {void}
+ * Sends a request to the background script and waits for a response
+ * @function sendRequest
+ * @param {string} type - The type of request
+ * @param {any} data - The data to send
+ * @returns {Promise<any>} The response from the background script
  */
-function sendToExtension(message) {
-  try {
-    chrome.runtime.sendMessage({
-      type: 'CHATGPT_DATA',
-      data: message
-    }, response => {
-      if (chrome.runtime.lastError) {
-        console.warn('Extension communication error:', chrome.runtime.lastError)
-        // Optionally show user feedback that the extension needs to be refreshed
-        alert('Extension context invalid. Please refresh the page.')
-      }
-      console.log('response ::', response)
-    })
-  } catch (error) {
-    console.warn('Failed to send message to extension:', error)
-    // Optionally show user feedback
-    alert('Extension communication failed. Please refresh the page.')
-  }
+async function sendRequest(type, data) {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.runtime.sendMessage({
+        type,
+        data,
+      }, response => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message))
+          return
+        }
+        resolve(response)
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+/**
+ * Sets the value of the ChatGPT textarea
+ * @function setPromptTextarea
+ * @param {string} text - The text to set in the textarea
+ */
+function setPromptTextarea(text) {
+  const textarea = document.querySelector('#prompt-textarea')
+  if (!textarea) return
+
+  // Create a new paragraph element
+  const p = document.createElement('p')
+  p.textContent = text
+
+  // Clear existing content and add new paragraph
+  textarea.innerHTML = ''
+  textarea.appendChild(p)
+
+  // Focus the textarea and trigger input event
+  textarea.focus()
+  textarea.dispatchEvent(new Event('input', { bubbles: true }))
 }
 
 /**
@@ -68,18 +90,28 @@ function addCaptureButton() {
     button.style.backgroundColor = '#FF9500'
   })
 
-  button.addEventListener('click', (e) => {
+  button.addEventListener('click', async (e) => {
     e.stopPropagation()
     e.preventDefault()
+    
     const userInput = getLastUserInput()
-    console.log('userInput ::', userInput)
+    if (!userInput) return
 
-    if (userInput) {
-      try {
-        sendToExtension(userInput)
-      } catch (error) {
-        console.warn('Error handling button click:', error)
+    try {
+      // Send request and wait for response
+      const response = await sendRequest('CONVERT_PROMPT', userInput)
+      console.log('response ::', response)
+      
+      if (response.success) {
+        // Update textarea with converted text
+        setPromptTextarea(response.data.convertedText)
+      } else {
+        console.warn('Failed to convert prompt:', response.error)
+        alert('프롬프트 변환에 실패했습니다.')
       }
+    } catch (error) {
+      console.warn('Error handling button click:', error)
+      alert('Extension communication failed. Please refresh the page.')
     }
   })
 
