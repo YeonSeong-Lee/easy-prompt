@@ -15,23 +15,47 @@ function getLastUserInput() {
  * @function sendRequest
  * @param {string} type - The type of request
  * @param {any} data - The data to send
+ * @param {function} onChunk - Callback function for handling streaming chunks
  * @returns {Promise<any>} The response from the background script
  */
-async function sendRequest(type, data) {
+async function sendRequest(type, data, onChunk) {
   return new Promise((resolve, reject) => {
     try {
-      chrome.runtime.sendMessage({
-        type,
-        data,
-      }, response => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message))
-          return
+      // Check if extension context is valid
+      if (!chrome.runtime?.id) {
+        reject(new Error('Extension context invalidated. Please refresh the page.'))
+        return
+      }
+
+      const port = chrome.runtime.connect({ name: 'prompt-stream' })
+      
+      // Handle port disconnection
+      port.onDisconnect.addListener(() => {
+        const error = chrome.runtime.lastError
+        if (error) {
+          reject(new Error(error.message || 'Connection lost'))
         }
-        resolve(response)
       })
+      
+      port.onMessage.addListener((message) => {
+        if (message.type === 'chunk') {
+          onChunk(message.data)
+        } else if (message.type === 'end') {
+          resolve(message.data)
+          port.disconnect()
+        } else if (message.type === 'error') {
+          reject(new Error(message.error))
+          port.disconnect()
+        }
+      })
+
+      port.postMessage({ type, data })
     } catch (error) {
-      reject(error)
+      if (error.message.includes('Extension context invalidated')) {
+        reject(new Error('Extension context invalidated. Please refresh the page.'))
+      } else {
+        reject(error)
+      }
     }
   })
 }
@@ -98,20 +122,38 @@ function addCaptureButton() {
     if (!userInput) return
 
     try {
-      // Send request and wait for response
-      const response = await sendRequest('CONVERT_PROMPT', userInput)
-      console.log('response ::', response)
-      
-      if (response.success) {
-        // Update textarea with converted text
-        setPromptTextarea(response.data.convertedText)
-      } else {
-        console.warn('Failed to convert prompt:', response.error)
-        alert('프롬프트 변환에 실패했습니다.')
+      // Check if extension context is valid
+      if (!chrome.runtime?.id) {
+        throw new Error('Extension context invalidated. Please refresh the page.')
       }
+
+      // Update button state to loading
+      button.disabled = true
+      button.textContent = '변환 중...'
+      button.style.backgroundColor = '#E6E6E6'
+
+      let convertedText = ''
+      
+      // Send request and handle streaming response
+      await sendRequest('CONVERT_PROMPT', userInput, (chunk) => {
+        convertedText += chunk
+        setPromptTextarea(convertedText)
+      })
+
     } catch (error) {
       console.warn('Error handling button click:', error)
-      alert('Extension communication failed. Please refresh the page.')
+      
+      // Show more specific error message
+      if (error.message.includes('Extension context invalidated')) {
+        alert('확장 프로그램이 업데이트되었습니다. 페이지를 새로고침해주세요.')
+      } else {
+        alert('프롬프트 변환 중 오류가 발생했습니다. 다시 시도해주세요.')
+      }
+    } finally {
+      // Reset button state
+      button.disabled = false
+      button.textContent = '프롬프트 변환'
+      button.style.backgroundColor = '#FF9500'
     }
   })
 
