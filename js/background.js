@@ -1,3 +1,5 @@
+import { SYSTEM_PROMPT } from "./system-prompt.js";
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.sidePanel.setOptions({
     enabled: true,
@@ -16,8 +18,6 @@ chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
  * @param {function} sendResponse - Function to send response back
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Received request:', request)
-
   switch (request.type) {
     case 'CONVERT_PROMPT':
       handleConvertPrompt(request, sendResponse)
@@ -41,17 +41,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  */
 async function handleConvertPrompt(request, sendResponse) {
   try {
-    // TODO: 실제 프롬프트 변환 로직 구현
-    const convertedText = '변환된 프롬프트'
-
-    // Send the result to the side panel
-    chrome.runtime.sendMessage({
-      type: 'CHATGPT_DATA_TO_PANEL',
-      data: {
-        userInput: request.data
-      }
+    // Create a session with Gemini
+    const session = await chrome.aiOriginTrial.languageModel.create({
+      monitor(m) {
+        m.addEventListener("downloadprogress", (e) => {
+          console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
+        });
+      },
+      systemPrompt: SYSTEM_PROMPT,
     })
 
+    // Get the response stream
+    const stream = await session.promptStreaming(request.data)
+
+    // Collect the full response
+    let convertedText = ''
+    for await (const chunk of stream) {
+      convertedText += chunk
+    }
+  
     // Send success response back to content script
     sendResponse({
       success: true,
