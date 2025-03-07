@@ -1,4 +1,4 @@
-import { SYSTEM_PROMPT } from "./system-prompt.js";
+import { SYSTEM_PROMPT, CODY_PROMPT } from "./system-prompt.js";
 
 // Keep track of active sessions
 const sessions = new Map()
@@ -29,14 +29,26 @@ chrome.runtime.onConnect.addListener((port) => {
           let session = sessions.get(port.sender?.tab?.id)
           
           if (!session) {
+            if (request.data.includes('코디세이')) {
             session = await chrome.aiOriginTrial.languageModel.create({
               monitor(m) {
                 m.addEventListener("downloadprogress", (e) => {
                   console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
                 });
               },
-              systemPrompt: SYSTEM_PROMPT,
+              systemPrompt: CODY_PROMPT,
             })
+            }
+            else {
+              session = await chrome.aiOriginTrial.languageModel.create({
+                monitor(m) {
+                  m.addEventListener("downloadprogress", (e) => {
+                    console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
+                  });
+                },
+                systemPrompt: SYSTEM_PROMPT,
+              })
+            }
             sessions.set(port.sender?.tab?.id, session)
           }
 
