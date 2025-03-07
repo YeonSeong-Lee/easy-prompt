@@ -15,7 +15,9 @@
   <body>
     <h1 class="text--eb">이-지 프롬프트</h1>
     <div class="box">
-      <div id="prompt_result" class="result"></div>
+      <div id="prompt_result" class="result">
+        <div id="responses_container" class="responses-container"></div>
+      </div>
       <div class="prompt-form">
         <textarea
           id="prompt_input"
@@ -31,5 +33,16 @@
         </div>
       </div>
     </div>
+
+    <!-- Response Template -->
+    <template id="response_template">
+      <div class="response-container">
+        <div class="response-header">
+          <span class="response-number text--b"></span>
+          <button class="copy-button">⧉</button>
+        </div>
+        <pre class="response-content result--child"></pre>
+      </div>
+    </template>
   </body>
 </html>

@@ -11,50 +11,39 @@ const session = await chrome.aiOriginTrial.languageModel.create({
 
 let currentController = null;
 
-async function createResultContainer() {
-  const resultContainer = document.createElement('div')
-  resultContainer.classList.add('result--container')
-
-  const buttonBar = document.createElement('div')
-  buttonBar.classList.add('result--buttons')
-
-  const preElement = document.createElement('pre')
-  preElement.classList.add('result--child')
-
-  const copyButton = document.createElement('button')
-  copyButton.textContent = '⧉'
-  copyButton.classList.add('copy-button')
-  copyButton.addEventListener('click', () => {
-    navigator.clipboard
-      .writeText(preElement.textContent)
-      .then(() => console.log('Copied to clipboard'))
-      .catch((err) => console.error('Failed to copy text', err))
-
-    copyButton.textContent = '✔'
-
-    setTimeout(() => {
-      copyButton.textContent = '⧉'
-    }, 3000)
+function createResponseElement(number) {
+  const template = document.getElementById('response_template')
+  const responseElement = template.content.cloneNode(true)
+  
+  const container = responseElement.querySelector('.response-container')
+  const numberSpan = responseElement.querySelector('.response-number')
+  const content = responseElement.querySelector('.response-content')
+  const copyButton = responseElement.querySelector('.copy-button')
+  
+  numberSpan.textContent = `응답 ${number}`
+  
+  content.addEventListener('click', () => {
+    // Remove selected class from all responses
+    document.querySelectorAll('.response-content').forEach(el => {
+      el.classList.remove('selected')
+    })
+    // Add selected class to clicked response
+    content.classList.add('selected')
   })
 
-  buttonBar.appendChild(copyButton)
-  resultContainer.appendChild(preElement)
+  copyButton.addEventListener('click', () => {
+    navigator.clipboard
+      .writeText(content.textContent)
+      .then(() => {
+        copyButton.textContent = '✔'
+        setTimeout(() => {
+          copyButton.textContent = '⧉'
+        }, 3000)
+      })
+      .catch((err) => console.error('Failed to copy text', err))
+  })
 
-  return { resultContainer, buttonBar, preElement }
-}
-
-async function handleStreamResponse(stream, preElement, resultArea) {
-  let previousChunk = ''
-
-  for await (const chunk of stream) {
-    const newChunk = chunk.startsWith(previousChunk)
-      ? chunk.slice(previousChunk.length)
-      : chunk
-
-    preElement.textContent += newChunk
-    resultArea.scrollTop = resultArea.scrollHeight
-    previousChunk = chunk
-  }
+  return { container, content }
 }
 
 async function updateButtonState(btn, isLoading = false) {
@@ -65,30 +54,43 @@ async function updateButtonState(btn, isLoading = false) {
 async function callGemini() {
   try {
     const promptTextArea = document.getElementById('prompt_input')
-    const resultArea = document.getElementById('prompt_result')
+    const resultArea = document.getElementById('responses_container')
     const inputPrompt = promptTextArea.value
     promptTextArea.value = ''
-
-    console.log(inputPrompt)
 
     if (inputPrompt === '') return
 
     const btn = document.getElementById('prompt_button')
     await updateButtonState(btn, true)
 
+    // Clear previous responses
+    resultArea.innerHTML = ''
+
     currentController = new AbortController()
 
-    const { resultContainer, buttonBar, preElement } = await createResultContainer()
-    resultArea.appendChild(resultContainer)
+    // Generate 3 responses
+    const responses = []
+    for (let i = 1; i <= 3; i++) {
+      const { container, content } = createResponseElement(i)
+      resultArea.appendChild(container)
+      
+      try {
+        const stream = session.promptStreaming(inputPrompt, {
+          signal: currentController.signal,
+        })
 
-    const stream = session.promptStreaming(inputPrompt, {
-      signal: currentController.signal,
-    })
-
-    await handleStreamResponse(stream, preElement, resultArea)
-
-    resultContainer.appendChild(buttonBar)
-    resultArea.scrollTop = resultArea.scrollHeight
+        let text = ''
+        for await (const chunk of stream) {
+          text += chunk
+          content.textContent = text
+        }
+        responses.push(text)
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          content.textContent = '응답 생성 중 오류가 발생했습니다.'
+        }
+      }
+    }
 
     await updateButtonState(btn, false)
   } catch (error) {

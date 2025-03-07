@@ -162,4 +162,68 @@ div.box {
 .blink-text {
   color: black;
   animation: blink-move 1s infinite alternate ease-in-out;
+}
+
+.responses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.response-container {
+  position: relative;
+  animation: popUp 1s;
+}
+
+.response-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 10px;
+}
+
+.response-number {
+  color: var(--main-color);
+  font-size: 0.9rem;
+}
+
+.response-content {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.response-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 3px 4px 1px rgba(0, 0, 0, 0.2);
+}
+
+.response-content.selected {
+  border: 2px solid var(--main-color);
+  box-shadow: 0 0 0 2px rgba(255, 149, 0, 0.2);
+}
+
+.copy-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  padding: 5px;
+  padding-bottom: 0;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.2s ease-out;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.copy-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.copy-button:active {
+  background-color: rgba(0, 0, 0, 0.2);
 }/*# sourceMappingURL=main.css.map */
